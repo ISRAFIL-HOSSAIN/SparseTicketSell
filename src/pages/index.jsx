@@ -1,0 +1,10 @@
+export { default as Dashboard } from './Dashboard'; 
+export { default as Calendar } from './Calendar'; 
+export { default as Kanban } from './Kanban'; 
+export { default as Line } from './Line'; 
+export { default as Editor } from './Editor'; 
+export { default as ColorPicker } from './ColorPicker'; 
+export { default as Visa } from './visa/VisaViewPage';  
+export {default as Clients } from './client/ClientViewPage';
+export {default as Tickets } from './ticket/TicketViewPage';
+export { default as Payment } from './payment/PaymentViewPage';
