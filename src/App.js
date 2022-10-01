@@ -1,86 +1,104 @@
-import React, { useEffect } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { FiSettings } from 'react-icons/fi';
-import { TooltipComponent } from '@syncfusion/ej2-react-popups';
-import {Navbar, Footer, Sidebar , ThemeSetting } from './components';
-import {Dashboard,Visa,Payment, Tickets,Clients,Editor,ColorPicker,Calendar,Kanban,Line} from './pages';
+import React, { useContext } from "react";
+import { BrowserRouter,useNavigate, Routes, Route,Navigate } from 'react-router-dom';
 
-import { useStateContext } from './contexts/ContextProvider';
+import {Login, 
+  Dashboard,
+  Visa,
+  VisaEdit,
+  AddVisa,
+  VisaView,
+  Payment,
+  AddPayment,
+   Tickets,
+   Clients,
+   AddTickets,
+   AddClients,
+   Editor,
+   ColorPicker,
+   Calendar,
+   Kanban,
+   Line,
+   ClientDetailsPrint,
+   BuyerPayment,
+   SellerPayment,
+   AddBuyerPayment,
+   AddSellerPayment,
+   BuyerEdit,
+   SellerEdit,
+   BuyerView,
+   SellerView,
+   TicketEdit,
+   PrintTicket,
+  } from './pages';
 import './App.css';
+import { AuthContext } from "./contexts/AuthContext";
+import TicketAddPage from "./pages/ticket/TicketAddPage";
+
+
 
 
 const App = ()=>{
-  const { activeMenu ,themeSettings,setThemeSettings,currentColor,currentMode} = useStateContext();
+  const { currentUser } = useContext(AuthContext)
+  const RequiredAuth = ({children})=> {
+    return currentUser ? (children) : <Navigate to = "/login "/>
+  }
+
+  // const { activeMenu ,themeSettings,setThemeSettings,currentColor,currentMode} = useStateContext();
   return(
-    <div className={currentMode === 'Dark' ? 'dark' : '' }>
-      <BrowserRouter>
-        <div className="flex relative dark:bg-main-dark-bg">
-          <div className="fixed right-3 bottom-3" style={{zIndex:'1000'}}>
-            <TooltipComponent content="Settings" position="Top">
-              <button type = "button" 
-              className="text-3xl p-3 
-              hover:drop-shadow-xl 
-              hover:bg-light-gray text-white" 
-              onClick={() => setThemeSettings(true)}
-              style={{background: currentColor, borderRadius: '50%'}}>
-                <FiSettings/>
-              </button>
-            </TooltipComponent>
-          </div>
-          {
-          activeMenu ? (
-            <div className='w-72 fixed sidebar
-            dark:bg-secondary-dark-bg
-            bg-white'>
-              <Sidebar/>
-            </div>
-          ) : (
-            <div>
-              <Sidebar/> 
-            </div>
-          )}
-          <div className={
-            `dark:bg-main-dark-bg 
-            bg-main-bg 
-            main-h-screen  w-full 
-            ${activeMenu 
-              ? 'md:ml-72' 
-              : 'flex-2'}`
-          }>
-            <div className="fixed md:static
-            bg-main-bg dark:bg-main-dark-bg 
-            navbar w-full">
-              <Navbar/>
-            </div>
-         
-          <div>
-            {themeSettings && <ThemeSetting/>}
-            <Routes>
-               {/* Dashboard */}
-              <Route path="/" element={<Dashboard/>}/>
-              <Route path="/dashboard" element={<Dashboard/>}/>
+    <BrowserRouter>
+      <Routes>
+       
+        <Route path="/login" element={<Login/>}/>
 
-              {/* pages */}
-              <Route path="/tickets" element={<Tickets/>}/>
-              <Route path="/clients" element={<Clients/>}/>
-              <Route path="/visa" element={<Visa/>}/>
-              <Route path="/payment" element={<Payment/>}/>
+        {/* Dashboard */}
+        <Route path="/" element={<RequiredAuth><Dashboard/></RequiredAuth>}/>
+        <Route path="/dashboard" element={<RequiredAuth><Dashboard/></RequiredAuth>}/>
+        
+        {/* pages */}
+        
+        <Route path="/add-tickets" element={<RequiredAuth><AddTickets/></RequiredAuth>}/>
 
-              {/* Apps */}
-              <Route path="/kanban" element={<Kanban/>}/>
-              <Route path="/editor" element={<Editor/>}/>
-              <Route path="/calendar" element={<Calendar/>}/>
-              <Route path="/color-picker" element={<ColorPicker/>}/>
+        {/* clients  */}
+        <Route path="/clients" element={<RequiredAuth><Clients/></RequiredAuth>}/>
+        <Route path="/add-clients" element={<RequiredAuth><AddClients/></RequiredAuth>}/>
+        
+        {/* visa */}
+        <Route path="/visa" element={<RequiredAuth><Visa/></RequiredAuth>}/>
+        <Route path="/add-visa" element={<RequiredAuth><AddVisa/></RequiredAuth>}/>
+        <Route path="/visa-edit/:id" element={<RequiredAuth><VisaEdit/></RequiredAuth>}/>
+        <Route path="/visa-view/:id" element={<RequiredAuth><VisaView/></RequiredAuth>}/>
 
-              {/* Charts */}
-              <Route path="/line" element={<Line/>}/>
-            </Routes>
-          </div>
-        </div>
-      </div>
-      </BrowserRouter>
-    </div>
-  )
-}
+        {/* ticket  */}
+        <Route path="/tickets" element={<RequiredAuth><Tickets/></RequiredAuth>}/>
+        <Route path="/tickets-edit/:id" element={<RequiredAuth><TicketEdit/></RequiredAuth>}/>
+        <Route path="/tickets-view/:id" element={<RequiredAuth><PrintTicket/></RequiredAuth>}/>
+        {/* payment */}
+        <Route path="/payment" element={<RequiredAuth><Payment/></RequiredAuth>}/>
+        <Route path="/payment/buyer-payment" element={<RequiredAuth><BuyerPayment/></RequiredAuth>}/>
+        <Route path="/payment/seller-payment" element={<RequiredAuth><SellerPayment/></RequiredAuth>}/>
+
+        <Route path="/payment/add-buyer-payment" element={<RequiredAuth><AddBuyerPayment/></RequiredAuth>}/>
+        <Route path="/payment/add-seller-payment" element={<RequiredAuth><AddSellerPayment/></RequiredAuth>}/>
+        
+        {/* payment-edit */}
+        <Route path="/payment/edit-buyer/:id" element={<RequiredAuth><BuyerEdit/></RequiredAuth>}/>
+        <Route path="/payment/edit-seller/:id" element={<RequiredAuth><SellerEdit/></RequiredAuth>}/>
+
+        {/* view */}
+        <Route path="/payment/view-buyer/:id" element={<RequiredAuth><BuyerView/></RequiredAuth>}/>
+        <Route path="/payment/view-seller/:id" element={<RequiredAuth><SellerView/></RequiredAuth>}/>
+
+        {/* Apps */}
+        <Route path="/kanban" element={<RequiredAuth><Kanban/></RequiredAuth>}/>
+        <Route path="/editor" element={<RequiredAuth><Editor/></RequiredAuth>}/>
+        <Route path="/calendar" element={<RequiredAuth><Calendar/></RequiredAuth>}/>
+        <Route path="/color-picker" element={<RequiredAuth><ColorPicker/></RequiredAuth>}/>
+
+        {/* Charts */}
+        <Route path="/line" element={<RequiredAuth><Line/></RequiredAuth>}/> 
+      </Routes>
+    </BrowserRouter>
+  );
+};
 
 export default App

@@ -1,33 +1,35 @@
-import React from 'react';
-import { GridComponent, ColumnsDirective,Search,
-  ColumnDirective, Page, Toolbar, Edit, Inject, Filter, Sort } from '@syncfusion/ej2-react-grids';
-import { clientsData, clientsGrid } from '../../data/dummy';
+import React,{useEffect,useState} from 'react'; 
 import { Header } from '../../components';
+import { Link, useParams } from "react-router-dom";
+import { CommonLayout,Pagination } from '../../components';
 
 const PaymentViewPage = () => {
-  const toolbarOptions = ['Add','Edit','Delete','Update','Cancel','Search'];
-  const editing = { allowDeleting: true, allowEditing: true,allowAdding:true,mode:'Normal'};
-
   return (
+    <CommonLayout>
     <div className="m-2 md:m-10 mt-24 p-2 md:p-10 bg-white rounded-3xl">
-      <Header category="Page" title="Tickets" />
-      <GridComponent
-        dataSource={clientsData}
-        width="auto"
-        allowPaging
-        allowSorting
-        pageSettings={{ pageCount: 5 }}
-        editSettings={editing}
-        toolbar={toolbarOptions}
-      >
-        <ColumnsDirective>
-          {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-          {clientsGrid.map((item, index) => <ColumnDirective key={index} {...item} />)}
-        </ColumnsDirective>
-        <Inject services={[Page,Toolbar,Search,Edit,Sort,Filter]} />
-
-      </GridComponent>
+        <div className='flex justify-between'>
+            <Header category="Payments" title="Payment Page" />  
+        </div>
+        <div className={`overflow-x-auto relative shadow-md sm:rounded-lg`} style={{padding:"20px"}}>
+            <Link to={"/payment/buyer-payment"}>
+                <button className="bg-green-600 px-3 py-1 rounded-md text-white">
+                    Buyer Agency Payment
+                </button>
+            </Link>
+        </div>
+        <div style={{height:"30px"}}></div>
+        <div className={`overflow-x-auto relative shadow-md sm:rounded-lg`} style={{padding:"20px"}}>
+            <Link to={"/payment/seller-payment"}>
+                <button className="bg-green-600 px-3 py-1 rounded-md text-white">
+                    Seller Agency Payment
+                </button>
+            </Link>
+        </div>
+        
+        
     </div>
-  );
-};
-export default PaymentViewPage;
+    </CommonLayout>
+  )
+}
+
+export default PaymentViewPage

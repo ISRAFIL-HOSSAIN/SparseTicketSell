@@ -9,4 +9,5 @@ export { default as Sidebar } from './Sidebar';
 export {default as Notification } from './Notification'; 
 export {default as SparkLine} from './Charts/SparkLine' ; 
 export {default as Stacked} from './Charts/Stacked' ; 
-export {default as Pagination} from './common/Pagination'; 
+export {default as CommonLayout } from './Layout/Layout';
+export {default as Pagination } from './Pagination';

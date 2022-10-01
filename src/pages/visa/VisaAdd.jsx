@@ -7,41 +7,15 @@ import {
     doc, 
     setDoc,
     serverTimestamp,
-    onSnapshot,
-    updateDoc, 
-    getDoc
+    onSnapshot
 } from "firebase/firestore"; 
 import { auth,db } from '../../model/firebase';
 import { useNavigate } from 'react-router-dom';
-import {notification,Spin } from "antd"; 
 
 
-const VisaEditPage = () => {
-
+const VisaAddPage = () => {
     const [ data, setData ] = useState({}); 
-    const [ visa, setVisa ] = useState([]); 
     const navigate = useNavigate(); 
-    const {id} = useParams(); 
-
-    useEffect(()=>{
-        async function getVisa(){
-
-            const docRef = doc(db,"visa", id); 
-            try{
-                const docSnap = await getDoc(docRef);
-                let list = []; 
-                list.push({...docSnap.data()}) 
-                setVisa(list);
-               
-            }
-            catch(error){
-                console.log(error); 
-            }
-    
-        }
-        getVisa();    
-    },[]);
-    console.log("VIsa is : ", visa) 
 
     const handleInput =(e)=>{
         console.log(e.target.id); 
@@ -53,29 +27,22 @@ const VisaEditPage = () => {
         setData({ ...data, [id]: value });
         
     }
-
     console.log(data); 
-
-    const handleUpdate = async (e)=>{
-       
+    const handleSubmit = async (e)=>{
+        console.log("CLick handle SUbmit")
         e.preventDefault(); 
         try{
-            
-            const updatedata = doc(db,"visa",id)
-            updateDoc(updatedata,{
+            await addDoc(collection(db,"visa"),{
                 ...data,
+                timeStamp: serverTimestamp(),
             });
-            notification["success"]({
-                message: "Successfully Updated",
-              });
             navigate(-1)
 
         }catch(err){
-            notification["Error"]({
-                message: err,
-              });
             console.log(err); 
         }
+        console.log("Handle Submit finish"); 
+
     };
    
   return (
@@ -100,8 +67,7 @@ const VisaEditPage = () => {
                     
                         <div className="mt-5 md:col-span-2 md:mt-0">
                             
-                            <form onSubmit={handleUpdate}>
-                            {visa?.map((visa)=>(
+                            <form onSubmit={handleSubmit}>
                                 <div className="overflow-hidden shadow sm:rounded-md">
                                     <div className="bg-white px-4 py-5 sm:p-6">
                                         <div className="grid grid-cols-6 gap-6">
@@ -111,10 +77,8 @@ const VisaEditPage = () => {
                                                 </label>
                                                 <input type="text"
                                                     onChange={handleInput}
-                                                    required
                                                     id="pessanger" 
-                                                    defaultValue={visa.pessanger}
-                                                    
+                                                    name="pessanger"
                                                     class="bg-gray-50 border border-gray-300 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-gray-900 text-sm rounded-lg block w-full p-2.5  "/>
                                             </div>
 
@@ -125,9 +89,8 @@ const VisaEditPage = () => {
                                                 <input 
                                                     onChange={handleInput}
                                                     type="text" 
-                                                    required
                                                     id="visanumber" 
-                                                    defaultValue={visa.visanumber}
+                                                    name="visanumber"
                                                     class="bg-gray-50 border border-gray-300 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-gray-900 text-sm rounded-lg block w-full p-2.5  "/>
                                             </div>
 
@@ -139,8 +102,7 @@ const VisaEditPage = () => {
                                                     onChange={handleInput}
                                                     type="text"  
                                                     id="passport"
-                                                    required
-                                                    defaultValue={visa.passport}
+                                                    name="passport"
                                                     class="bg-gray-50 border border-gray-300 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-gray-900 text-sm rounded-lg block w-full p-2.5  "/>
                                             </div>
                                             <div className="col-span-6 sm:col-span-3">
@@ -151,7 +113,7 @@ const VisaEditPage = () => {
                                                     onChange={handleInput}
                                                     type="text"  
                                                     id="destination"
-                                                    defaultValue={visa.destination}
+                                                    name="destination"
                                                     class="bg-gray-50 border border-gray-300 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-gray-900 text-sm rounded-lg block w-full p-2.5  "/>
                                             </div>
 
@@ -164,7 +126,7 @@ const VisaEditPage = () => {
                                                     type="number" 
                                                     min="1" 
                                                     id="debit"
-                                                    defaultValue={visa.debit}
+                                                    name="debit"
                                                     class="bg-gray-50 border border-gray-300 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-gray-900 text-sm rounded-lg block w-full p-2.5  "/>
                                             </div>
                                             <div className="col-span-6 sm:col-span-3">
@@ -176,7 +138,7 @@ const VisaEditPage = () => {
                                                     onChange={handleInput}
                                                     type="number" min="1"
                                                     id="credit"
-                                                    defaultValue={visa.credit}
+                                                    name="credit"
                                                     class="bg-gray-50 border border-gray-300 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 text-gray-900 text-sm rounded-lg block w-full p-2.5  "/>
                                             </div>
 
@@ -189,11 +151,10 @@ const VisaEditPage = () => {
                                             type="submit"
                                             className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                         >
-                                            Update
+                                            Save
                                         </button>
                                     </div>
                                 </div>
-                            ))}
                             </form>
                         </div>
                     </div>
@@ -210,4 +171,4 @@ const VisaEditPage = () => {
   )
 }
 
-export default VisaEditPage
+export default VisaAddPage
